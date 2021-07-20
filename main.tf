@@ -10,23 +10,13 @@ provider "aws" {
   region  = "us-east-2"
 }
 
-
 data "aws_caller_identity" "source" {
   provider = aws.source
 }
 
-data "aws_iam_policy_document" "ec2_all" {
+data "aws_iam_policy" "ec2" {
   provider = aws.destination
-  statement {
-    actions   = ["ec2:*"]
-    resources = ["arn:aws:ec2:::*"]
-  }
-}
-
-resource "aws_iam_policy" "ec2_all" {
-  provider = aws.destination
-  name     = "ec2_all"
-  policy   = data.aws_iam_policy_document.ec2_all.json
+  name     = "AmazonEC2FullAccess"
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -44,6 +34,6 @@ resource "aws_iam_role" "assume_role" {
   provider            = aws.destination
   name                = "assume_role"
   assume_role_policy  = data.aws_iam_policy_document.assume_role.json
-  managed_policy_arns = [aws_iam_policy.ec2_all.arn]
+  managed_policy_arns = [data.aws_iam_policy.ec2.arn]
 }
 
