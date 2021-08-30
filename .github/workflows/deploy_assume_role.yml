@@ -1,0 +1,17 @@
+name: Build AWS Role
+on: 
+  pull:
+    branches: [main]
+
+jobs:
+  build:
+    - name: Checkout
+      uses: actions/checkout@v2.3.4
+    - name: Terraform Init
+      run: terraform init
+    - name: Terraform Plan
+      run: terraform plan
+    - name: Terraform Apply
+      run: terraform apply
+    - name: Terraform Destroy
+      run: terraform destroy
